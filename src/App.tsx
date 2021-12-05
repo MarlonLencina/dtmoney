@@ -1,26 +1,75 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { GlobalStyle } from "./styles/globalStyle";
+import { HeaderComponent } from "./components/header";
+import { Dashboard } from "./components/dashboard";
+import { createServer, Model } from "miragejs";
+import { useState } from "react";
+import { NewTransactionModal } from "./components/modal/index";
+import {
+  TransactionContextProvider,
+  TransactionsContext,
+} from "./TransactionsContext";
 
-function App() {
+createServer({
+  models: {
+    transaction: Model,
+  },
+  seeds(server) {
+    server.db.loadData({
+      transactions: [
+        {
+          id: 11,
+          title: "Freelancer de website",
+          type: "deposit",
+          amount: 6000,
+          created_at: new Date(2021, 2, 12, 20),
+        },
+        {
+          id: 12,
+          title: "Aluguel da casa",
+          type: "withdraw",
+          amount: 1100,
+          created_at: new Date(2021, 3, 12, 14),
+        },
+      ],
+    });
+  },
+  routes() {
+    this.namespace = "api";
+
+    this.get("/transactions", () => {
+      return this.schema.all("transaction");
+    });
+
+    this.post("/transactions", (schema, request) => {
+      const data = JSON.parse(request.requestBody);
+      return schema.create("transaction", data);
+    });
+  },
+});
+
+export function App() {
+  const [isNewTransictionModalOpen, setIsNewTransictionModalOpen] =
+    useState(false);
+
+  const handleNewTransactionModalOpen = () => {
+    setIsNewTransictionModalOpen(true);
+  };
+
+  const handleNewTransactionModalClose = () => {
+    setIsNewTransictionModalOpen(false);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <TransactionContextProvider>
+      <HeaderComponent
+        onOpenNewTransactionModal={handleNewTransactionModalOpen}
+      />
+      <NewTransactionModal
+        isOpen={isNewTransictionModalOpen}
+        onRequestClose={handleNewTransactionModalClose}
+      />
+      <Dashboard />
+      <GlobalStyle />
+    </TransactionContextProvider>
   );
 }
-
-export default App;
