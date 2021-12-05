@@ -1,11 +1,10 @@
-import React, { FormEvent, useContext } from "react";
+import { FormEvent, useContext } from "react";
 import { useState } from "react";
 import Modal from "react-modal";
 import { Container, TrnsactionTypeContainer, Button } from "./styles";
 import closeImg from "../../assets/close.svg";
 import IncomeImage from "../../assets/income.svg";
 import OutcomeImage from "../../assets/outcome.svg";
-import api from "../services/clientApi";
 import { TransactionsContext } from "../../TransactionsContext";
 
 Modal.setAppElement("#root");

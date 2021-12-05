@@ -2,8 +2,7 @@ import { Container } from "./styles";
 import IncomeImage from "../../assets/income.svg";
 import OutcomeImage from "../../assets/outcome.svg";
 import TotalImage from "../../assets/total.svg";
-import { useContext, useMemo } from "react";
-import { TransactionsContext, useTransaction } from "../../TransactionsContext";
+import { useTransaction } from "../../TransactionsContext";
 
 export const Summary = () => {
   const { transactions } = useTransaction();
